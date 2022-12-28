@@ -9,9 +9,9 @@ public:
     static void run_test(void(*unit_test)(), const char *name) {
         try {
             unit_test();
-            printf("[+] Test %s successful.\n", name);
+            printf("\033[32m[+] Test %s successful.\033[0m\n", name);
         } catch (const std::exception &e) {
-            printf("[-] Test failure in %s. %s.\n", name, e.what());
+            printf("\033[31m[-] Test failure in %s. %s.\033[0m\n", name, e.what());
         }
     }
 };

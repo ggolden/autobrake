@@ -23,7 +23,7 @@ public:
             publish(Events::BrakeCommand{time_to_collision_s});
         }
 
-        // publish(Events::SpeedUpdate{100});
+         publish(Events::SpeedUpdate{100});
     }
 
     void set_collision_threshold_s(double x) {
