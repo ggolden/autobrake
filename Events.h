@@ -3,15 +3,17 @@
 
 namespace Events {
     class Event {
+    public:
+        virtual ~Event() = default;
     };
 
-    class SpeedUpdate : Event {
+    class SpeedUpdate : public Event {
     public:
         double velocity_mps;
         explicit SpeedUpdate(double velocityMps) : velocity_mps(velocityMps) {}
     };
 
-    class CarDetected : Event {
+    class CarDetected : public Event {
     public:
         double distance_m;
         double velocity_mps;
@@ -19,7 +21,7 @@ namespace Events {
                                                             velocity_mps(velocityMps) {}
     };
 
-    class BrakeCommand : Event {
+    class BrakeCommand : public Event {
     public:
         double time_to_collision_s;
         explicit BrakeCommand(double timeToCollisionS) : time_to_collision_s(timeToCollisionS) {}

@@ -6,23 +6,23 @@
 #include "Harness.h"
 
 void initial_speed_is_zero() {
-    AutoBrake auto_brake{[](const Events::BrakeCommand &) {}};
+    AutoBrake auto_brake{[](const Events::Event &) {}};
     assert_that(auto_brake.get_speed_mps() == 0L, "speed not equal 0");
 }
 
 void initial_threshold_is_5() {
-    AutoBrake auto_brake{[](const Events::BrakeCommand &) {}};
+    AutoBrake auto_brake{[](const Events::Event &) {}};
     assert_that(auto_brake.get_collision_threshold_s() == 5L, "collision_threshold not equal 5");
 }
 
 void threshold_is_not_less_than_1() {
-    AutoBrake auto_brake{[](const Events::BrakeCommand &) {}};
+    AutoBrake auto_brake{[](const Events::Event &) {}};
     auto_brake.set_collision_threshold_s(0.9);
     assert_that(auto_brake.get_collision_threshold_s() == 1L, "collision_threshold less than 1");
 }
 
 void threshold_is_configurable() {
-    AutoBrake auto_brake{[](const Events::BrakeCommand &) {}};
+    AutoBrake auto_brake{[](const Events::Event &) {}};
     auto_brake.set_collision_threshold_s(1);
     assert_that(auto_brake.get_collision_threshold_s() == 1L, "collision_threshold not configurable to 1");
     auto_brake.set_collision_threshold_s(10);
@@ -32,7 +32,7 @@ void threshold_is_configurable() {
 }
 
 void speed_is_saved() {
-    AutoBrake auto_brake{[](const Events::BrakeCommand &) {}};
+    AutoBrake auto_brake{[](const Events::Event &) {}};
     auto_brake.observe(Events::SpeedUpdate{100L});
     assert_that(100L == auto_brake.get_speed_mps(), "speed not saved to 100");
     auto_brake.observe(Events::SpeedUpdate{50L});
@@ -43,8 +43,12 @@ void speed_is_saved() {
 
 void alert_when_imminent() {
     int brake_commands_published{};
-    AutoBrake auto_brake{[&brake_commands_published](const Events::BrakeCommand &) {
-        brake_commands_published++;
+    AutoBrake auto_brake{[&brake_commands_published](const Events::Event &event) {
+        if (dynamic_cast<const Events::BrakeCommand *>(&event)) {
+            brake_commands_published++;
+        } else {
+            assert_that(false, "Some other event was published");
+        }
     }};
     auto_brake.set_collision_threshold_s(10L);
     auto_brake.observe(Events::SpeedUpdate{100L});
@@ -54,8 +58,12 @@ void alert_when_imminent() {
 
 void no_alert_when_not_imminent() {
     int brake_commands_published{};
-    AutoBrake auto_brake{[&brake_commands_published](const Events::BrakeCommand &) {
-        brake_commands_published++;
+    AutoBrake auto_brake{[&brake_commands_published](const Events::Event &event) {
+        if (dynamic_cast<const Events::BrakeCommand *>(&event)) {
+            brake_commands_published++;
+        } else {
+            assert_that(false, "Some other event was published");
+        }
     }};
     auto_brake.set_collision_threshold_s(2L);
     auto_brake.observe(Events::SpeedUpdate{100L});

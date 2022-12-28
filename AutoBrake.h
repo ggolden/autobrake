@@ -21,8 +21,9 @@ public:
         const auto time_to_collision_s = cd.distance_m / relative_velocity_mps;
         if (time_to_collision_s > 0 && time_to_collision_s <= collision_threshold_s) {
             publish(Events::BrakeCommand{time_to_collision_s});
-            // publish(Events::SpeedUpdate{100});
         }
+
+        // publish(Events::SpeedUpdate{100});
     }
 
     void set_collision_threshold_s(double x) {
