@@ -1,28 +1,29 @@
-//
-// Created by Glenn R. Golden on 12/27/22.
-//
+#ifndef AUTOBRAKE_EVENTS_H
+#define AUTOBRAKE_EVENTS_H
 
-#ifndef AUTOBREAK_EVENTS_H
-#define AUTOBREAK_EVENTS_H
-
-
-class Events {
-public:
-
-    struct SpeedUpdate {
-        double velocity_mps;
+namespace Events {
+    class Event {
     };
 
-    struct CarDetected {
+    class SpeedUpdate : Event {
+    public:
+        double velocity_mps;
+        explicit SpeedUpdate(double velocityMps) : velocity_mps(velocityMps) {}
+    };
+
+    class CarDetected : Event {
+    public:
         double distance_m;
         double velocity_mps;
+        CarDetected(double distanceM, double velocityMps) : distance_m(distanceM),
+                                                            velocity_mps(velocityMps) {}
     };
 
-    struct BrakeCommand {
+    class BrakeCommand : Event {
+    public:
         double time_to_collision_s;
+        explicit BrakeCommand(double timeToCollisionS) : time_to_collision_s(timeToCollisionS) {}
     };
-
 };
 
-
-#endif //AUTOBREAK_EVENTS_H
+#endif //AUTOBRAKE_EVENTS_H

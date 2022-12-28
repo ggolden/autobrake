@@ -1,28 +1,28 @@
 #include <iostream>
 
 #include "Assert.h"
-#include "AutoBreak.h"
+#include "AutoBrake.h"
 #include "Events.h"
 #include "Harness.h"
 
 void initial_speed_is_zero() {
-    AutoBreak::AutoBrake auto_brake{[](const Events::BrakeCommand &) {}};
+    AutoBrake auto_brake{[](const Events::BrakeCommand &) {}};
     assert_that(auto_brake.get_speed_mps() == 0L, "speed not equal 0");
 }
 
 void initial_threshold_is_5() {
-    AutoBreak::AutoBrake auto_brake{[](const Events::BrakeCommand &) {}};
+    AutoBrake auto_brake{[](const Events::BrakeCommand &) {}};
     assert_that(auto_brake.get_collision_threshold_s() == 5L, "collision_threshold not equal 5");
 }
 
 void threshold_is_not_less_than_1() {
-    AutoBreak::AutoBrake auto_brake{[](const Events::BrakeCommand &) {}};
+    AutoBrake auto_brake{[](const Events::BrakeCommand &) {}};
     auto_brake.set_collision_threshold_s(0.9);
     assert_that(auto_brake.get_collision_threshold_s() == 1L, "collision_threshold less than 1");
 }
 
 void threshold_is_configurable() {
-    AutoBreak::AutoBrake auto_brake{[](const Events::BrakeCommand &) {}};
+    AutoBrake auto_brake{[](const Events::BrakeCommand &) {}};
     auto_brake.set_collision_threshold_s(1);
     assert_that(auto_brake.get_collision_threshold_s() == 1L, "collision_threshold not configurable to 1");
     auto_brake.set_collision_threshold_s(10);
@@ -32,7 +32,7 @@ void threshold_is_configurable() {
 }
 
 void speed_is_saved() {
-    AutoBreak::AutoBrake auto_brake{[](const Events::BrakeCommand &) {}};
+    AutoBrake auto_brake{[](const Events::BrakeCommand &) {}};
     auto_brake.observe(Events::SpeedUpdate{100L});
     assert_that(100L == auto_brake.get_speed_mps(), "speed not saved to 100");
     auto_brake.observe(Events::SpeedUpdate{50L});
@@ -43,7 +43,7 @@ void speed_is_saved() {
 
 void alert_when_imminent() {
     int brake_commands_published{};
-    AutoBreak::AutoBrake auto_brake{[&brake_commands_published](const Events::BrakeCommand &) {
+    AutoBrake auto_brake{[&brake_commands_published](const Events::BrakeCommand &) {
         brake_commands_published++;
     }};
     auto_brake.set_collision_threshold_s(10L);
@@ -54,7 +54,7 @@ void alert_when_imminent() {
 
 void no_alert_when_not_imminent() {
     int brake_commands_published{};
-    AutoBreak::AutoBrake auto_brake{[&brake_commands_published](const Events::BrakeCommand &) {
+    AutoBrake auto_brake{[&brake_commands_published](const Events::BrakeCommand &) {
         brake_commands_published++;
     }};
     auto_brake.set_collision_threshold_s(2L);
@@ -64,7 +64,7 @@ void no_alert_when_not_imminent() {
 }
 
 int main() {
-    std::cout << "Hello, Tests!" << std::endl;
+    std::cout << "AutoBrake Tests:" << std::endl;
 
     Harness::run_test(initial_speed_is_zero, "initial_speed_is_zero");
     Harness::run_test(initial_threshold_is_5, "initial_threshold_is_5");

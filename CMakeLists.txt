@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
-project(autobreak)
+project(autobrake)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(autobreak main.cpp AutoBreak.cpp AutoBreak.h Events.cpp Events.h Assert.h Harness.h)
+add_executable(autobrake main.cpp AutoBrake.cpp AutoBrake.h Events.cpp Events.h Assert.h Harness.h)
